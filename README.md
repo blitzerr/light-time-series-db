@@ -17,7 +17,48 @@ relationo database.
 
 1. Querying is rare and usually done over a recent window of time (mostly to plot dashboards and alerts). Queries spanning multiple series ((source, metric) tuple) is quite common.
 
+## Data Model
+### Metric Types
+|Name|timestamp|Value|Tags
+|----|---------|-----|----|
+|http.post.count|5649799|23|host=A;version=1.0.9
+|http.post.count|5649756|23|host=B;version=1.0.9
+|http.get.count|5649799|2|host=M,N;version=1.0.9
+|unix.cpu.load|5649799|0.34|host=23,45;linux=5.28
+
+### Log types
+|Name|timestamp|Value|Tags
+|----|---------|-----|----|
+|apachelogs|5649799|{path="", level= "", message=""}|host=A,B;version=1.0.9
+|postgres.logs|5649799|{path="", level= "", message=""}|host=A,B;version=1.0.9
+
+The system is required to handle queries like
+
+select avg(http.*) WITH time between (t1, t2) bucketized over 5seconds and (host=A || host=M) group by version.
+
+## Usage
+
+### Configurations
+
+The configurations are specified in the `config/default.toml`.
+By default the server runs on `http://localhost:9200`. You can configure the host and port in the config.
+
+### Ingest
+
+```json
+curl -X POST "localhost:9200/<source>/<metric>?pretty" -H 'Content-Type: application/json' -d'
+[
+    {"timestamp": "<unix epoch milliseconds>", "value": 23.345},
+    {"timestamp": "<unix epoch milliseconds>", "value": 29.345}
+]
+'
+```
+
+
+
 ## Design
+
+-- TBD
 
 ## References
 
@@ -36,3 +77,4 @@ relationo database.
 ### Code
 
 - [Prometheus](https://github.com/prometheus/prometheus/tree/main/tsdb)
+- [InfluxDB-IOX](https://github.com/influxdata/influxdb_iox)
