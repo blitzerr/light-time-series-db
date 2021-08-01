@@ -1,5 +1,8 @@
+use internment::ArcIntern;
+
 mod errs;
 mod search_based;
+mod col_store;
 
 pub const SOURCE_STR: &str = "source";
 pub const METRIC_STR: &str = "metric";
@@ -7,26 +10,31 @@ pub const TIMESTAMP_STR: &str = "timestamp";
 pub const VALUE_STR: &str = "value";
 pub const TAGS_STR: &str = "tags";
 
+type TagStrTy = ArcIntern<&'static str>;
+
 /// Tags can be a simple key/value pair where value is a single value string.
 /// This API also supports providing the value as a list of strings.
+#[derive(Debug, Clone)]
 pub enum TagTy {
-    Str(String, String),
-    List(String, Vec<String>),
+    Str(TagStrTy, TagStrTy),
+    List(TagStrTy, Vec<TagStrTy>),
 }
 
+#[derive(Debug)]
 pub struct TimestampedVals {
     // The timestamp should be unix epoch format in milliseconds.
     timestamp: u64,
     // TODO: Extend this to include structured logs.
     value: f64,
     // Each data point can be associated with multiple tags.
-    _tags: Vec<TagTy>,
+    tags: Vec<TagTy>,
 }
 
 /// A point identifies a datapoint in a particular series. Usually, the clients like beats or
 /// firelens tries to optimize for network throughput by batching points and therefore, the struct
 /// is designed in a way that supports multiple points from the same series in a batch and then
 /// many such series points can be batched on top to follow a cache friendly data-oriented design.
+#[derive(Debug)]
 pub struct Point {
     source: String,
     metric: String,

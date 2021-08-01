@@ -148,7 +148,7 @@ impl SearchBasedWriter {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use core::f64;
     use std::{path::Path, u64, vec};
 
@@ -186,7 +186,7 @@ mod tests {
         .unwrap();
     }
 
-    fn gen_points(sources: &Vec<&str>, metric: &Vec<&str>, start: u64, end: u64) -> Vec<Point> {
+    pub(crate) fn gen_points(sources: &Vec<&str>, metric: &Vec<&str>, start: u64, end: u64) -> Vec<Point> {
         assert_eq!(
             sources.len(),
             metric.len(),
@@ -203,7 +203,7 @@ mod tests {
                     .map(|t| TimestampedVals {
                         timestamp: t,
                         value: t as f64,
-                        _tags: vec![],
+                        tags: vec![],
                     })
                     .collect();
                 Point {
