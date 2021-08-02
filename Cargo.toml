@@ -5,7 +5,8 @@ edition = "2018"
 
 [workspace] # In alphabetical order
 members = [
-    "mem_col_store"
+    "mem_col_store",
+    "query"
 ]
 
 [dependencies]

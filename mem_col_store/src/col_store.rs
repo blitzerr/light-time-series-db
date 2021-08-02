@@ -1,18 +1,17 @@
 use core::f64;
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::HashMap,
     ops::{Index, Range},
-    path::Path,
 };
 
 use internment::ArcIntern;
 
 use crate::{Point, TagTy};
 
-type TagStrTy = ArcIntern<String>;
+pub type TagStrTy = ArcIntern<String>;
 
 #[derive(Debug)]
-enum ColTy {
+pub enum ColTy {
     /// A string column where instead of storing raw values, we intern them.
     Str(ArcIntern<String>),
     /// Should be used for the timestamp col.
@@ -25,7 +24,7 @@ enum ColTy {
 }
 
 #[derive(Debug)]
-struct TimeseriesStore {
+pub struct TimeseriesStore {
     source: Vec<ColTy>,
     metric: Vec<ColTy>,
     time: Vec<ColTy>,
@@ -37,7 +36,7 @@ struct TimeseriesStore {
 }
 
 impl TimeseriesStore {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         TimeseriesStore {
             source: Vec::with_capacity(100),
             metric: Vec::with_capacity(100),
@@ -50,7 +49,7 @@ impl TimeseriesStore {
         }
     }
 
-    pub(crate) fn put_stream(&mut self, batch: Vec<Point>) -> color_eyre::Result<()> {
+    pub fn put_stream(&mut self, batch: Vec<Point>) -> color_eyre::Result<()> {
         batch.into_iter().for_each(|pt| {
             pt.vals.iter().for_each(|val| {
                 let source = ArcIntern::new(pt.source.clone());
@@ -77,9 +76,7 @@ impl TimeseriesStore {
         Ok(())
     }
 
-    pub(crate) fn close_stream(&self) {}
-
-    pub(crate) fn query(
+    pub fn query(
         &self,
         time_range: Range<u64>,
         metrics: &Vec<&str>,
@@ -116,10 +113,6 @@ impl TimeseriesStore {
             .collect();
         println!("{:?}", result);
     }
-}
-
-fn create_idx(path: &Path) -> color_eyre::Result<TimeseriesStore> {
-    todo!()
 }
 
 #[cfg(test)]

@@ -12,14 +12,14 @@ use tantivy::{
     DocAddress, Index, IndexWriter, Opstamp, ReloadPolicy,
 };
 
-struct SearchBasedWriter {
-    index: Index,
-    i_writer: IndexWriter,
-    schema: Schema,
+pub struct SearchBasedWriter {
+    pub index: Index,
+    pub i_writer: IndexWriter,
+    pub schema: Schema,
 }
 
 impl SearchBasedWriter {
-    fn create_idx(index_path: &Path) -> Result<(Index, Schema)> {
+    pub fn create_idx(index_path: &Path) -> Result<(Index, Schema)> {
         let mut schema_builder = Schema::builder();
         schema_builder.add_text_field(
             SOURCE_STR,
@@ -54,7 +54,7 @@ impl SearchBasedWriter {
         Ok((index, schema))
     }
 
-    pub(crate) fn new(index_path: &Path) -> Result<SearchBasedWriter> {
+    pub fn new(index_path: &Path) -> Result<SearchBasedWriter> {
         let (index, schema) = SearchBasedWriter::create_idx(index_path)?;
         let i_writer = index.writer(50_000_000)?;
         Ok(SearchBasedWriter {
@@ -64,7 +64,7 @@ impl SearchBasedWriter {
         })
     }
 
-    pub(crate) fn put_stream(&self, batch: Vec<Point>) -> Result<()> {
+    pub fn put_stream(&self, batch: Vec<Point>) -> Result<()> {
         let source_field = self
             .schema
             .get_field(SOURCE_STR)
@@ -98,12 +98,12 @@ impl SearchBasedWriter {
 
         Ok(())
     }
-    pub(crate) fn close_stream(&mut self) -> Result<Opstamp> {
+    pub fn close_stream(&mut self) -> Result<Opstamp> {
         let op_stamp = self.i_writer.commit()?;
         Ok(op_stamp)
     }
 
-    pub(crate) fn query(
+    pub fn query(
         index: &Index,
         schema: &Schema,
         range: Range<u64>,
