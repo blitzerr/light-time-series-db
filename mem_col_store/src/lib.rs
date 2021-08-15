@@ -1,9 +1,9 @@
 use internment::ArcIntern;
 
-pub mod errs;
-pub mod search_based;
 pub mod col_store;
 pub mod col_tys;
+pub mod errs;
+pub mod search_based;
 
 pub const SOURCE_STR: &str = "source";
 pub const METRIC_STR: &str = "metric";

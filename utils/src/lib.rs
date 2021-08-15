@@ -1,8 +1,4 @@
-#[macro_use]
-mod aggs;
-pub mod filters;
-mod planner;
-mod qry;
+pub mod compose;
 
 #[cfg(test)]
 mod tests {

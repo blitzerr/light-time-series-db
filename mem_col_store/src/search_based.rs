@@ -186,7 +186,12 @@ pub(crate) mod tests {
         .unwrap();
     }
 
-    pub(crate) fn gen_points(sources: &Vec<&str>, metric: &Vec<&str>, start: u64, end: u64) -> Vec<Point> {
+    pub(crate) fn gen_points(
+        sources: &Vec<&str>,
+        metric: &Vec<&str>,
+        start: u64,
+        end: u64,
+    ) -> Vec<Point> {
         assert_eq!(
             sources.len(),
             metric.len(),

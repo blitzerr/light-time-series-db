@@ -32,15 +32,8 @@
 //! as early as possible before doing any processing, this crate has a dependency on the storage
 //! crate.
 
-use std::fmt;
-mod str_filter;
-
-
 #[cfg(test)]
 mod tests {
     #[test]
-    fn t_filter() {
-
-    }
+    fn t_filter() {}
 }
-
